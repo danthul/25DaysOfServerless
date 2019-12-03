@@ -1,0 +1,340 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_ServerlessChallengeDay2_name": {
+            "defaultValue": "ServerlessChallengeDay2",
+            "type": "string"
+        },
+        "workflows_ServerlessChallengeDay2_parameters_$connections": {
+            "defaultValue": {
+                "office365": {
+                    "connectionId": "/subscriptions/8093bdec-1ff6-4497-b17c-58670db5357c/resourceGroups/serverlessChallengeDay2/providers/Microsoft.Web/connections/office365",
+                    "connectionName": "office365",
+                    "id": "/subscriptions/8093bdec-1ff6-4497-b17c-58670db5357c/providers/Microsoft.Web/locations/centralus/managedApis/office365"
+                }
+            },
+            "type": "Object"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-07-01",
+            "dependsOn": [],
+            "location": "centralus",
+            "name": "[parameters('workflows_ServerlessChallengeDay2_name')]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {
+                                "office365": {
+                                    "connectionId": "/subscriptions/8093bdec-1ff6-4497-b17c-58670db5357c/resourceGroups/serverlessChallengeDay2/providers/Microsoft.Web/connections/office365",
+                                    "connectionName": "office365",
+                                    "id": "/subscriptions/8093bdec-1ff6-4497-b17c-58670db5357c/providers/Microsoft.Web/locations/centralus/managedApis/office365"
+                                }
+                            },
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Week",
+                                "interval": 1,
+                                "startTime": "2019-12-13T08:00:00Z",
+                                "timeZone": "W. Europe Standard Time"
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "1_minute_delay": {
+                            "runAfter": {
+                                "Return_to_kitchen_email": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 1,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "25_minute_delay": {
+                            "runAfter": {
+                                "Start_the_coffee_Email": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 25,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "4_minute_delay": {
+                            "runAfter": {
+                                "Deliver_coffee_to_Mom_and_Dad_Email": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 4,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "4_minute_delay_(2)": {
+                            "runAfter": {
+                                "Deliver_coffee_to_brother_and_sister": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 4,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "5_minute_delay": {
+                            "runAfter": {
+                                "Pour_2_cups_of_coffee_email": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 5,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "5_minute_delay_(2)": {
+                            "runAfter": {
+                                "Light_The_Candles_Email_(First)": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 5,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "5_minute_delay_(3)": {
+                            "runAfter": {
+                                "Relight_the_candles": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 5,
+                                    "unit": "Minute"
+                                }
+                            }
+                        },
+                        "Deliver_coffee_to_Mom_and_Dad_Email": {
+                            "runAfter": {
+                                "5_minute_delay_(2)": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Deliver the coffee to Mom and Dad</p>",
+                                    "Subject": "Deliver the coffee to Mom and Dad",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        },
+                        "Deliver_coffee_to_brother_and_sister": {
+                            "runAfter": {
+                                "5_minute_delay_(3)": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Deliver the coffee to sister and brother</p>",
+                                    "Subject": "Deliver the coffee to Sister and Brother",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        },
+                        "Light_The_Candles_Email_(First)": {
+                            "runAfter": {
+                                "5_minute_delay": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Light the candles now</p>",
+                                    "Subject": "Light the candles",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        },
+                        "Pour_2_cups_of_coffee_email": {
+                            "runAfter": {
+                                "25_minute_delay": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Pour two cups of coffee</p>",
+                                    "Subject": "Pour two cups",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        },
+                        "Relight_the_candles": {
+                            "runAfter": {
+                                "1_minute_delay": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Relight the candles</p>",
+                                    "Subject": "Relight the candles",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        },
+                        "Return_to_kitchen_and_take_a_break!_email": {
+                            "runAfter": {
+                                "4_minute_delay_(2)": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Return to kitchen and take a break!</p>",
+                                    "Subject": "Return to kitchen and take a break!",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        },
+                        "Return_to_kitchen_email": {
+                            "runAfter": {
+                                "4_minute_delay": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Return to the kitchen and fill two more cups</p>",
+                                    "Subject": "Return to the kitchen",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        },
+                        "Start_the_coffee_Email": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Time to start the coffee</p>",
+                                    "Subject": "Start the coffee!",
+                                    "To": "lucy@thul.dev"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": "[parameters('workflows_ServerlessChallengeDay2_parameters_$connections')]"
+                    }
+                },
+                "state": "Enabled"
+            },
+            "scale": null,
+            "tags": {},
+            "type": "Microsoft.Logic/workflows"
+        }
+    ],
+    "variables": {}
+}
