@@ -1,0 +1,28 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "get",
+        "post"
+      ]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    },
+    {
+      "name": "animalImage",
+      "type": "cosmosDB",
+      "databaseName": "AnimalImages",
+      "collectionName": "Images",
+      "createIfNotExists": true,
+      "connectionStringSetting": "twentyfivedaychallenge_DOCUMENTDB",
+      "direction": "out"
+  }
+  ]
+}
